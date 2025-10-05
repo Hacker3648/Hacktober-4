@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="pos_service_charge_template" inherit_id="point_of_sale.template" xml:space="preserve">
+
+	<t t-name="pos_service_charge.ServiceChargeButton" owl="1">
+		<button class="control-button service-charge odoo-theme-color" t-on-click="() => this.onClick()">
+			<i class="fa fa-credit-card"></i>
+			Service Charge
+		</button>
+	</t>
+
+<!--	 OrderSummary-->
+	<t t-name="OrderWidget" t-inherit="point_of_sale.OrderWidget" t-inherit-mode="extension" owl="1">
+		<xpath expr="//div[hasclass('order-summary')]" position="replace">
+			<t t-if="env.services.pos.mainScreen.component.name == 'ProductScreen'">
+
+			<t t-if="env.services.pos.config.service_charge_type">
+				<div class='entry_total' style="text-align: right;">
+					<div class="subtotal" style="font-size: 20px;">
+						Subtotal:
+						<span><t t-esc="env.utils.formatCurrency(subtotal)"/></span>
+					</div>
+					<div class="subentry" style="padding-top: 5px; padding-bottom: 5px; font-weight: bold;">
+						Taxes:
+						<span><t t-esc="env.utils.formatCurrency(taxes)"/></span>
+					</div>
+					<div class="service" style="border-bottom: solid 2px; border-color: #777; padding-bottom: 5px; font-weight: bold; font-size: 16px;">
+						Service Charge:
+						<span><t t-esc="env.utils.formatCurrency(service_charges)"/></span>
+					</div>
+					<div class="label" style="padding-top: 5px;">
+						Total:
+						<span><t t-esc="env.utils.formatCurrency(total)"/></span>
+					</div>
+				</div>
+			</t>
+			<t t-else="">
+				<div t-if="props.total or props.tax" class="order-summary w-100 py-2 px-3 bg-100 text-end fw-bolder fs-2 lh-sm">
+					Total:
+					<span t-esc="props.total" class="total"/>
+					<div t-if="props.tax" class="fs-6 text-muted subentry">
+						Taxes: <span t-esc="props.tax" class="tax"/>
+					</div>
+				</div>
+            	<t t-slot="details"/>
+			</t>
+			</t>
+		</xpath>
+	</t>
+		
+	
+	<!-- PaymentScreen-Paymentlines -->
+	<t t-name="PaymentScreen-Paymentlines" t-inherit="point_of_sale.PaymentScreenStatus" t-inherit-mode="extension" owl="1">
+		<xpath expr="//div[hasclass('total')]" position="replace">
+			<t t-if="env.services.pos.config.service_charge_type">
+				 <div class="total text-center py-2 text-success">
+					<t t-esc="env.utils.formatCurrency(total)" />
+				 </div>
+			</t>
+			<t t-else="">
+				<div class="total text-center py-2 text-success">
+                    <t t-esc="totalDueText" />
+                </div>
+			</t>
+		</xpath>
+		<xpath expr="//div[hasclass('payment-status-total-due')]" position="replace">
+			<t t-if="env.services.pos.config.add_floor_service_charge">
+				 <div class="payment-status-total-due py-2 fs-3 text-muted">
+						<span class="label pe-2">Total Due</span>
+						<span>
+							<t t-esc="env.utils.formatCurrency(total)" />
+						</span>
+				</div>
+			</t>
+			<t t-else="">
+				<div class="payment-status-total-due py-2 fs-3 text-muted">
+                    <span class="label pe-2">Total Due</span>
+                    <span>
+                        <t t-esc="totalDueText" />
+                    </span>
+                </div>
+			</t>	
+		</xpath>
+	</t>
+
+</templates>
+
+
