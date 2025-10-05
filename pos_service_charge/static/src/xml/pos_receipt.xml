@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="pos_service_charge_template1" inherit_id="point_of_sale.template" xml:space="preserve">
+	<t t-name="OrderReceipt1" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+		<xpath expr="//div[hasclass('pos-receipt-amount')]" position="replace">
+			<div>
+				Service Charge
+				<span class="pos-receipt-right-align" t-esc="env.utils.formatCurrency(service_charges)" />
+			</div>
+			<span style="padding-left: 90%">--------</span>
+			<div class="pos-receipt-amount">
+				TOTAL
+				<span class="pos-receipt-right-align" t-esc="env.utils.formatCurrency(total)" />
+			</div>
+		</xpath>
+	</t>
+
+	<t t-name="ReceiptScreen" t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension" owl="1">
+		<xpath expr="//div[hasclass('top-content')]" position="replace">
+			<t t-if="env.services.pos.config.service_charge_type">
+
+				<div class="top-content d-flex align-items-center py-3 border-bottom text-center" t-if="!ui.isSmall">
+					<div class="top-content-center flex-grow-1">
+						<h1 class="mb-0">
+							<t t-esc="env.utils.formatCurrency(total)" />
+						</h1>
+					</div>
+				</div>
+			</t>
+			<t t-else="">
+				<div class="top-content d-flex align-items-center py-3 border-bottom text-center" t-if="!ui.isSmall">
+                    <div class="top-content-center flex-grow-1">
+                        <h1 class="mb-0">
+                            <t t-esc="orderAmountPlusTip" />
+                        </h1>
+                    </div>
+                </div>
+			</t>
+		</xpath>
+	</t>
+</templates>
+
+
